@@ -2,96 +2,100 @@
 package no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.ui.home
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.alpacas.PartyInfo
 import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.votes.District
 import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.votes.DistrictVotes
-import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.votes.districtValgt
 
-//@Preview
+class VoteList{
 @Composable
-fun viseFremStemmer(partiesViewModel: HomeViewModel = viewModel(),district: District) {
+    fun ViseFremStemmer(partiesViewModel: HomeViewModel = viewModel(), district: District) {
+        val partiesUiState: PartiesUiState by partiesViewModel.partiesUiState.collectAsState()
+        val votes = remember{when(district){District.District1 -> partiesViewModel.velgDistrictVotes.votes1
+            District.District2 -> partiesViewModel.velgDistrictVotes.votes2
+            District.District3 -> partiesViewModel.velgDistrictVotes.votes3}}
+        Card(modifier = Modifier.padding(10.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
 
-//fun viseFremStemmer(partiesViewModel: HomeViewModel = viewModel(), district: District) {
-    val partiesUiState: PartiesUiState by partiesViewModel.partiesUiState.collectAsState()
-    val votesUiState: PartiesUiState by partiesViewModel.partiesUiState.collectAsState()
+                Text(
+                    text = ("Parti"),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    fontWeight = FontWeight.Bold
+                )
 
-    Row(
-        modifier = Modifier
-            .background(Color(0xFF6200EE))
-            .padding(16.dp)
-            .fillMaxSize(), // Fyll kortets størrelsew
-    ) {
-        Text(
-            text = "Parties",
-            style = MaterialTheme.typography.titleMedium,
-            /*textAlign = TextAlign.Left,*/
-            modifier = Modifier
-                .padding(16.dp)
-                .weight(1f)
-
-        )
-        Text(
-            text = "Antall stemmer",
-            style = MaterialTheme.typography.titleMedium,
-            /*textAlign = TextAlign.Right,*/
-            modifier = Modifier
-                .padding(16.dp)
-                .weight(1f)
-        )
+                Text(
+                    text = "Antall stemmer",
+                    modifier = Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Right,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyColumn(modifier = Modifier.padding(10.dp)) {
+                    items(partiesUiState.parties) { party ->
+                        Votes(
+                            party = party,
+                            votes = votes
+                        )
+                    }
+                }
+            }
+        }
     }
-        Column(
+    @Composable
+    fun Votes(party: PartyInfo, votes: List<DistrictVotes>) {
+        val vote = votes.find{partyVote -> partyVote.alpacaPartyId == party.id.toString()}
+        Row(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize()
-                .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            partiesUiState.parties.forEach { item ->
-                Text(text = item.name, fontSize = 18.sp)
-            }
-    }
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-            .offset(y = (-190).dp,x = 220.dp)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        when(district){District.District1 ->votesUiState.votes1.forEach { item ->
-            Text(text = item.numberOfVotesForParty.toString(), fontSize = 18.sp)
-        }
-            District.District2 ->votesUiState.votes2.forEach { item ->
-                Text(text = item.numberOfVotesForParty.toString(), fontSize = 18.sp)
-            }
-            District.District3 ->votesUiState.votes3.forEach { item ->
-                Text(text = item.numberOfVotesForParty.toString(), fontSize = 18.sp)
-            }
-        }
+            Text(
+                text = party.name,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.weight(1f)
+            )
 
+            Text(
+                text = vote?.numberOfVotesForParty.toString(),
+                textAlign = TextAlign.Right,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
-
 }
+
+
+
 

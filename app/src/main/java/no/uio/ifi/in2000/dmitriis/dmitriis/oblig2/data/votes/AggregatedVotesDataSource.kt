@@ -16,34 +16,34 @@ import io.ktor.client.request.get
 import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.votes.District
 import no.uio.ifi.in2000.dmitriis.dmitriis.oblig2.model.votes.DistrictVotes
+
 import org.json.JSONObject
 
 class AggregatedVotesDataSource{
 
     var path: String = "https://www.uio.no/studier/emner/matnat/ifi/IN2000/v24/obligatoriske-oppgaver/district3.json"
-    private val client = HttpClient(){
+    val client = HttpClient(){
         install(ContentNegotiation){
             gson()
         }
     }
+
     suspend fun fetchDistrict3(): List<DistrictVotes>{
-        var jsonString: String = client.get(path).body()
+        val jsonString: String = client.get(path).body()
         val jsonObject = JSONObject(jsonString)
         val partiesArray = jsonObject.getJSONArray("parties")
 
-        val votes: MutableList<DistrictVotes> = mutableListOf()
-        for (i in 0 until partiesArray.length()) {
-            val jsonObject = partiesArray.getJSONObject(i)
-            val partiId = jsonObject.getString("partyId")
-            val voteCount = jsonObject.getString("votes").toInt()
-            val districtVotes = DistrictVotes(District.District3, partiId, voteCount)
-            votes.add(districtVotes)
-        }
-        return votes.sortedBy { it.alpacaPartyId.toInt() }
+         val votes = (0 until partiesArray.length()).map { i ->
+             val partyObject = partiesArray.getJSONObject(i)
+             val partiId = partyObject.getString("partyId")
+             val voteCount = partyObject.getInt("votes")
+             DistrictVotes(District.District3, partiId, voteCount)
+         }
+         return votes.sortedBy { it.alpacaPartyId.toInt() }
     }
 }
-/*
-@Preview
+
+/*@Preview
 @Composable
 fun test2() {
     val aggregatedVotesDataSource = AggregatedVotesDataSource()
@@ -56,5 +56,6 @@ fun test2() {
     Column {
         Text(text = "District 3 votes: ${results?.size}")
         Text(text = "District 3 votes: ${results}")
+
     }
 }*/

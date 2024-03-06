@@ -2,22 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Stemmer">
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="MyApp">
         <State />
       </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="test (2)">
-        <State />
-      </entry>
       <entry key="test1">
         <State />
       </entry>
-      <entry key="test3">
+      <entry key="test1 (1)">
         <State />
       </entry>
-      <entry key="viseFremStemmer">
+      <entry key="test2">
         <State />
       </entry>
     </value>

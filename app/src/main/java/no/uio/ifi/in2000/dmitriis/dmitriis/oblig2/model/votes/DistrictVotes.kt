@@ -7,3 +7,5 @@ val alpacaPartyId: String,
 val numberOfVotesForParty: Int) {
 
 }
+
+

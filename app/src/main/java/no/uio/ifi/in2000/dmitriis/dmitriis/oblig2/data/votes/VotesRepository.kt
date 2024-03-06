@@ -66,6 +66,7 @@ class VotesRepositorySamlet(
 }
 
 
+/*
 @Preview
 @Composable
 fun test3() {
@@ -113,6 +114,7 @@ fun test3() {
 
     }
 }
+*/
 
 
 

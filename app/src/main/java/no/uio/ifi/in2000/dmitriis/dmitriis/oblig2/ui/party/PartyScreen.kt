@@ -62,7 +62,7 @@ fun PartyScreen(partyViewModel: PartyViewModel = viewModel(), onNavigateToHomeSc
 fun PartyCard(
     party: PartyInfo,
     colorString: String = party.color,
-    color: androidx.compose.ui.graphics.Color = Color(android.graphics.Color.parseColor(colorString)),
+    color: Color = Color(android.graphics.Color.parseColor(colorString)),
 ) {
     val cardHeight = 300.dp
     Card(
@@ -76,9 +76,9 @@ fun PartyCard(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxSize(), // Fyll kortets størrelse
-            verticalArrangement = Arrangement.Center, // Senter vertikalt
-            horizontalAlignment = Alignment.CenterHorizontally // Senter horisontalt
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Text(
